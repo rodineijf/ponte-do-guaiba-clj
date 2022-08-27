@@ -1,9 +1,7 @@
 (ns ponte-do-guaiba-clj.core
-  (:require [chime.core :as chime]
-            [clojure.string :as str]
+  (:require [clojure.string :as str]
             [morse.api :as t]
             [clj-http.client :as client])
-  (:import [java.time Instant Duration])
   (:gen-class))
 
 (def token (System/getenv "TELEGRAM_BOT_TOKEN"))
@@ -44,8 +42,4 @@
   (println "=> Starting")
   (assert (some? token) "TELEGRAM_BOT_TOKEN is missing")
   (assert (some? chat-id) "TELEGRAM_CHAT_ID is missing")
-  (chime/chime-at
-   (-> (chime/periodic-seq (Instant/now) (Duration/ofMinutes 10))
-       rest)
-   (fn [_]
-     (notify-new-lifting-messages))))
+  (notify-new-lifting-messages))

@@ -5,7 +5,6 @@
             :url "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [[cheshire "5.11.0"]
                  [clj-http "3.12.3"]
-                 [jarohen/chime "0.3.3"]
                  [morse "0.4.3"]
                  [org.clojure/clojure "1.10.3"]]
   :repl-options {:init-ns ponte-do-guaiba-clj.core}
