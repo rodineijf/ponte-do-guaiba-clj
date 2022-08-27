@@ -2,16 +2,15 @@
   (:require [clojure.string :as str]
             [morse.api :as t]
             [clojure.java.jdbc :as jdbc]
-            [clj-http.client :as client])
+            [clj-http.client :as client]
+            [ponte-do-guaiba-clj.env :as env])
   (:gen-class))
 
-(def token (System/getenv "TELEGRAM_BOT_TOKEN"))
-(def chat-id (System/getenv "TELEGRAM_CHAT_ID"))
 
 (def db
   {:classname   "org.sqlite.JDBC"
    :subprotocol "sqlite"
-   :subname     "db/database.db"})
+   :subname     env/sqlite-path})
 
 (defn create-db
   []
@@ -43,7 +42,7 @@
 
 (defn send-message
   [message]
-  (t/send-text token chat-id message))
+  (t/send-text env/telegram-token env/telegram-chat-id message))
 
 (defn notify-new-lifting-messages
   []
@@ -58,7 +57,7 @@
 (defn -main
   [& args]
   (println "=> Starting")
-  (assert (some? token) "TELEGRAM_BOT_TOKEN is missing")
-  (assert (some? chat-id) "TELEGRAM_CHAT_ID is missing")
+  (assert (some? env/telegram-token) "TELEGRAM_BOT_TOKEN is missing")
+  (assert (some? env/telegram-chat-id) "TELEGRAM_CHAT_ID is missing")
   (create-db)
   (notify-new-lifting-messages))
