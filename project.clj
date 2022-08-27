@@ -9,4 +9,5 @@
                  [morse "0.4.3"]
                  [org.clojure/clojure "1.10.3"]]
   :repl-options {:init-ns ponte-do-guaiba-clj.core}
-  :main ponte-do-guaiba-clj.core/main)
+  :aot [ponte-do-guaiba-clj.core]
+  :main ponte-do-guaiba-clj.core)
