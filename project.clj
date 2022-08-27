@@ -6,7 +6,9 @@
   :dependencies [[cheshire "5.11.0"]
                  [clj-http "3.12.3"]
                  [morse "0.4.3"]
-                 [org.clojure/clojure "1.10.3"]]
+                 [org.clojure/clojure "1.10.3"]
+                 [org.clojure/java.jdbc "0.7.12"]
+                 [org.xerial/sqlite-jdbc "3.23.1"]]
   :repl-options {:init-ns ponte-do-guaiba-clj.core}
   :aot [ponte-do-guaiba-clj.core]
   :main ponte-do-guaiba-clj.core)

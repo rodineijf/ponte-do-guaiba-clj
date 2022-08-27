@@ -1,12 +1,27 @@
 (ns ponte-do-guaiba-clj.core
   (:require [clojure.string :as str]
             [morse.api :as t]
+            [clojure.java.jdbc :as jdbc]
             [clj-http.client :as client])
   (:gen-class))
 
 (def token (System/getenv "TELEGRAM_BOT_TOKEN"))
 (def chat-id (System/getenv "TELEGRAM_CHAT_ID"))
-(def last-message-property-key "bot.last-message-sent")
+
+(def db
+  {:classname   "org.sqlite.JDBC"
+   :subprotocol "sqlite"
+   :subname     "db/database.db"})
+
+(defn create-db
+  []
+  (jdbc/db-do-commands
+   db
+   (jdbc/create-table-ddl :messages_sent
+                          [[:id :integer "PRIMARY KEY"]
+                           [:body :text]
+                           [:timestamp :datetime :default :current_timestamp]]
+                          {:conditional? true})))
 
 (defn next-lifting-message
   []
@@ -17,11 +32,14 @@
 
 (defn last-message-sent
   []
-  (System/getProperty last-message-property-key))
+  (-> db
+      (jdbc/query ["SELECT body FROM messages_sent ORDER BY id DESC LIMIT 1"])
+      first
+      :body))
 
 (defn update-last-message-sent
   [message]
-  (System/setProperty last-message-property-key message))
+  (jdbc/insert! db :messages_sent {:body message}))
 
 (defn send-message
   [message]
@@ -42,4 +60,5 @@
   (println "=> Starting")
   (assert (some? token) "TELEGRAM_BOT_TOKEN is missing")
   (assert (some? chat-id) "TELEGRAM_CHAT_ID is missing")
+  (create-db)
   (notify-new-lifting-messages))
